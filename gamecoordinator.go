@@ -84,3 +84,7 @@ func (g *GameCoordinator) SendClientHello() {
 	hello := gamecoordinator.NewGCMsgProtobuf(uint32(730), uint32(cspb.EGCBaseClientMsg_k_EMsgGCClientHello), &protobuf.CMsgClientHello{ProtocolVersion: proto.Uint32(2000202)})
 	g.Write(hello)
 }
+
+func (g *GameCoordinator) InspectUrl(req *cspb.CMsgGCCStrike15V2_Client2GCEconPreviewDataBlockRequest) {
+	g.Write(gamecoordinator.NewGCMsgProtobuf(uint32(730), uint32(cspb.ECsgoGCMsg_k_EMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockRequest), req))
+}
