@@ -7,12 +7,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Philipp15b/go-steam/v3/protocol"
-	"github.com/Philipp15b/go-steam/v3/protocol/protobuf"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
-	"github.com/Philipp15b/go-steam/v3/rwu"
-	"github.com/Philipp15b/go-steam/v3/socialcache"
-	"github.com/Philipp15b/go-steam/v3/steamid"
+	"github.com/imorugiy/go-steam/protocol"
+	"github.com/imorugiy/go-steam/protocol/protobuf"
+	"github.com/imorugiy/go-steam/protocol/steamlang"
+	"github.com/imorugiy/go-steam/rwu"
+	"github.com/imorugiy/go-steam/socialcache"
+	"github.com/imorugiy/go-steam/steamid"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -238,8 +238,8 @@ func (s *Social) HandlePacket(packet *protocol.Packet) {
 		s.handleIgnoreFriendResponse(packet)
 	case steamlang.EMsg_ClientFriendProfileInfoResponse:
 		s.handleProfileInfoResponse(packet)
-	case steamlang.EMsg_ClientFSGetFriendMessageHistoryResponse:
-		s.handleFriendMessageHistoryResponse(packet)
+		// case steamlang.EMsg_ClientFSGetFriendMessageHistoryResponse:
+		// 	s.handleFriendMessageHistoryResponse(packet)
 	}
 }
 

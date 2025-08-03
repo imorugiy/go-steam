@@ -22,10 +22,10 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/Philipp15b/go-steam/v3"
-	"github.com/Philipp15b/go-steam/v3/netutil"
-	"github.com/Philipp15b/go-steam/v3/protocol"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/imorugiy/go-steam"
+	"github.com/imorugiy/go-steam/netutil"
+	"github.com/imorugiy/go-steam/protocol"
 )
 
 // Base structure holding common data among GsBot modules.

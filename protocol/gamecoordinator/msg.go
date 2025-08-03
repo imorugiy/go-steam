@@ -3,8 +3,8 @@ package gamecoordinator
 import (
 	"io"
 
-	"github.com/Philipp15b/go-steam/v3/protocol"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
+	"github.com/imorugiy/go-steam/protocol"
+	"github.com/imorugiy/go-steam/protocol/steamlang"
 	"google.golang.org/protobuf/proto"
 )
 

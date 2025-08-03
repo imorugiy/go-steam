@@ -3,10 +3,11 @@ package steam
 import (
 	"bytes"
 
-	"github.com/Philipp15b/go-steam/v3/protocol"
-	"github.com/Philipp15b/go-steam/v3/protocol/gamecoordinator"
-	"github.com/Philipp15b/go-steam/v3/protocol/protobuf"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
+	cspb "github.com/imorugiy/go-steam/csgo/protocol/protobuf"
+	"github.com/imorugiy/go-steam/protocol"
+	"github.com/imorugiy/go-steam/protocol/gamecoordinator"
+	"github.com/imorugiy/go-steam/protocol/protobuf"
+	"github.com/imorugiy/go-steam/protocol/steamlang"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -77,4 +78,9 @@ func (g *GameCoordinator) SetGamesPlayed(appIds ...uint64) {
 	g.client.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientGamesPlayed, &protobuf.CMsgClientGamesPlayed{
 		GamesPlayed: games,
 	}))
+}
+
+func (g *GameCoordinator) SendClientHello() {
+	hello := gamecoordinator.NewGCMsgProtobuf(uint32(730), uint32(cspb.EGCBaseClientMsg_k_EMsgGCClientHello), &protobuf.CMsgClientHello{ProtocolVersion: proto.Uint32(2000202)})
+	g.Write(hello)
 }

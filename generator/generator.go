@@ -20,6 +20,12 @@ import (
 
 var printCommands = false
 
+var (
+	pkgRegex                 = regexp.MustCompile(`(package \w+)`)
+	unusedImportCommentRegex = regexp.MustCompile("// discarding unused import .*\n")
+	fileDescriptorVarRegex   = regexp.MustCompile(`fileDescriptor\d+`)
+)
+
 func main() {
 	args := strings.Join(os.Args[1:], " ")
 
@@ -46,8 +52,8 @@ func main() {
 func clean() {
 	print("# Cleaning")
 	cleanGlob("../protocol/**/*.pb.go")
-	cleanGlob("../tf2/protocol/**/*.pb.go")
-	cleanGlob("../dota/protocol/**/*.pb.go")
+	// cleanGlob("../tf2/protocol/**/*.pb.go")
+	// cleanGlob("../dota/protocol/**/*.pb.go")
 	cleanGlob("../csgo/protocol/**/*.pb.go")
 
 	os.Remove("../protocol/steamlang/enums.go")
@@ -74,8 +80,8 @@ func buildProto() {
 	print("# Building Protobufs")
 
 	buildProtoMap("steam", clientProtoFiles, "../protocol/protobuf")
-	buildProtoMap("tf2", tf2ProtoFiles, "../tf2/protocol/protobuf")
-	buildProtoMap("dota2", dotaProtoFiles, "../dota/protocol/protobuf")
+	// buildProtoMap("tf2", tf2ProtoFiles, "../tf2/protocol/protobuf")
+	// buildProtoMap("dota2", dotaProtoFiles, "../dota/protocol/protobuf")
 	buildProtoMap("csgo", csgoProtoFiles, "../csgo/protocol/protobuf")
 }
 
@@ -91,9 +97,9 @@ func buildProtoMap(srcSubdir string, files map[string]string, outDir string) {
 		opt = append(opt, "--go_opt=M"+proto+"=Protobufs/"+srcSubdir+"/"+proto)
 	}
 
-	if srcSubdir == "dota2" {
-		opt = append(opt, "--go_opt=Mecon_shared_enums.proto=Protobufs/"+srcSubdir+"/econ_shared_enums.proto")
-	}
+	// if srcSubdir == "dota2" {
+	// 	opt = append(opt, "--go_opt=Mecon_shared_enums.proto=Protobufs/"+srcSubdir+"/econ_shared_enums.proto")
+	// }
 
 	for proto, out := range files {
 		full := filepath.Join(outDir, out)
@@ -113,20 +119,20 @@ var clientProtoFiles = map[string]string{
 	"steammessages_clientserver_2.proto":       "client_server_2.pb.go",
 	"steammessages_clientserver_friends.proto": "client_server_friends.pb.go",
 	"steammessages_clientserver_login.proto":   "client_server_login.pb.go",
-	"steammessages_sitelicenseclient.proto":    "client_site_license.pb.go",
+	// "steammessages_sitelicenseclient.proto":    "client_site_license.pb.go",
 
-	"content_manifest.proto": "content_manifest.pb.go",
+	// "content_manifest.proto": "content_manifest.pb.go",
 
-	"steammessages_unified_base.steamclient.proto":      "unified/base.pb.go",
-	"steammessages_cloud.steamclient.proto":             "unified/cloud.pb.go",
-	"steammessages_credentials.steamclient.proto":       "unified/credentials.pb.go",
-	"steammessages_deviceauth.steamclient.proto":        "unified/deviceauth.pb.go",
-	"steammessages_gamenotifications.steamclient.proto": "unified/gamenotifications.pb.go",
-	"steammessages_offline.steamclient.proto":           "unified/offline.pb.go",
-	"steammessages_parental.steamclient.proto":          "unified/parental.pb.go",
-	"steammessages_partnerapps.steamclient.proto":       "unified/partnerapps.pb.go",
-	"steammessages_player.steamclient.proto":            "unified/player.pb.go",
-	"steammessages_publishedfile.steamclient.proto":     "unified/publishedfile.pb.go",
+	// "steammessages_unified_base.steamclient.proto":      "unified/base.pb.go",
+	// "steammessages_cloud.steamclient.proto":             "unified/cloud.pb.go",
+	// "steammessages_credentials.steamclient.proto":       "unified/credentials.pb.go",
+	// "steammessages_deviceauth.steamclient.proto":        "unified/deviceauth.pb.go",
+	// "steammessages_gamenotifications.steamclient.proto": "unified/gamenotifications.pb.go",
+	// "steammessages_offline.steamclient.proto":           "unified/offline.pb.go",
+	// "steammessages_parental.steamclient.proto":          "unified/parental.pb.go",
+	// "steammessages_partnerapps.steamclient.proto":       "unified/partnerapps.pb.go",
+	// "steammessages_player.steamclient.proto":            "unified/player.pb.go",
+	// "steammessages_publishedfile.steamclient.proto":     "unified/publishedfile.pb.go",
 }
 
 var tf2ProtoFiles = map[string]string{
@@ -157,7 +163,7 @@ var csgoProtoFiles = map[string]string{
 	"gcsystemmsgs.proto":           "system.pb.go",
 	"netmessages.proto":            "net.pb.go",
 	"network_connection.proto":     "networkconnection.pb.go",
-	"steammessages.proto":          "steam.pb.go",
+	"networkbasetypes.proto":       "networkbasetypes.pb.go",
 	"uifontfile_format.proto":      "uifontfile.pb.go",
 }
 
@@ -199,10 +205,6 @@ func forceRename(from, to string) error {
 	}
 	return os.Rename(from, to)
 }
-
-var pkgRegex = regexp.MustCompile(`(package \w+)`)
-var unusedImportCommentRegex = regexp.MustCompile("// discarding unused import .*\n")
-var fileDescriptorVarRegex = regexp.MustCompile(`fileDescriptor\d+`)
 
 func fixProto(outDir, path string) {
 	// goprotobuf is really bad at dependencies, so we must fix them manually...

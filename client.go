@@ -13,12 +13,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Philipp15b/go-steam/v3/cryptoutil"
-	"github.com/Philipp15b/go-steam/v3/netutil"
-	"github.com/Philipp15b/go-steam/v3/protocol"
-	"github.com/Philipp15b/go-steam/v3/protocol/protobuf"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
-	"github.com/Philipp15b/go-steam/v3/steamid"
+	"github.com/imorugiy/go-steam/cryptoutil"
+	"github.com/imorugiy/go-steam/netutil"
+	"github.com/imorugiy/go-steam/protocol"
+	"github.com/imorugiy/go-steam/protocol/protobuf"
+	"github.com/imorugiy/go-steam/protocol/steamlang"
+	"github.com/imorugiy/go-steam/steamid"
 )
 
 // Represents a client to the Steam network.
@@ -290,8 +290,6 @@ func (c *Client) handlePacket(packet *protocol.Packet) {
 		c.handleChannelEncryptResult(packet)
 	case steamlang.EMsg_Multi:
 		c.handleMulti(packet)
-	case steamlang.EMsg_ClientCMList:
-		c.handleClientCMList(packet)
 	}
 
 	c.handlersMutex.RLock()
@@ -371,21 +369,6 @@ func (c *Client) handleMulti(packet *protocol.Packet) {
 		}
 		c.handlePacket(p)
 	}
-}
-
-func (c *Client) handleClientCMList(packet *protocol.Packet) {
-	body := new(protobuf.CMsgClientCMList)
-	packet.ReadProtoMsg(body)
-
-	l := make([]*netutil.PortAddr, 0)
-	for i, ip := range body.GetCmAddresses() {
-		l = append(l, &netutil.PortAddr{
-			readIp(ip),
-			uint16(body.GetCmPorts()[i]),
-		})
-	}
-
-	c.Emit(&ClientCMListEvent{l})
 }
 
 func readIp(ip uint32) net.IP {

@@ -11,6 +11,8 @@
 //               username + loginkey
 //
 //     gsbot [username] [-p password] [-a authcode] [-t twofactorcode] [-l loginkey]
+//
+// Use `GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn` due to same types in proto files
 
 package main
 
@@ -18,9 +20,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Philipp15b/go-steam/v3"
-	"github.com/Philipp15b/go-steam/v3/gsbot"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
+	"github.com/imorugiy/go-steam"
+	"github.com/imorugiy/go-steam/gsbot"
+	"github.com/imorugiy/go-steam/protocol/steamlang"
 )
 
 const usage string = "usage: gsbot [username] [-p password] [-a authcode] [-t twofactorcode] [-l loginkey]"
