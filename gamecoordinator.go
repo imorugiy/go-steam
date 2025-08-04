@@ -31,6 +31,16 @@ func (g *GameCoordinator) RegisterPacketHandler(handler GCPacketHandler) {
 	g.handlers = append(g.handlers, handler)
 }
 
+func (g *GameCoordinator) UnregisterPacketHandler(handler GCPacketHandler) {
+	newHandlers := g.handlers[:0]
+	for _, h := range g.handlers {
+		if h != handler {
+			newHandlers = append(newHandlers, h)
+		}
+	}
+	g.handlers = newHandlers
+}
+
 func (g *GameCoordinator) HandlePacket(packet *protocol.Packet) {
 	if packet.EMsg != steamlang.EMsg_ClientFromGC {
 		return
