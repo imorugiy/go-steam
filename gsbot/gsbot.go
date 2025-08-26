@@ -91,6 +91,23 @@ func (a *Auth) HandleEvent(event interface{}) {
 	}
 }
 
+type Web struct {
+	bot *GsBot
+}
+
+func NewWeb(bot *GsBot) *Web {
+	return &Web{bot: bot}
+}
+
+func (w *Web) HandleEvent(event interface{}) {
+	switch e := event.(type) {
+	case *steam.WebLoggedOnEvent:
+		w.bot.Log.Printf("Successfully web logged on (%v)", e)
+	case *steam.WebLogOnErrorEvent:
+		w.bot.Log.Printf("Failed to web log on (%v)", e)
+	}
+}
+
 // This module saves the server list from ClientCMListEvent and uses
 // it when you call `Connect()`.
 type ServerList struct {

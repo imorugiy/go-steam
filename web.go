@@ -51,9 +51,9 @@ func (w *Web) HandlePacket(packet *protocol.Packet) {
 // Fetches the `steamLogin` cookie. This may only be called after the first
 // WebSessionIdEvent or it will panic.
 func (w *Web) LogOn() {
-	if w.webLoginKey == "" {
-		panic("Web: webLoginKey not initialized!")
-	}
+	// if w.webLoginKey == "" {
+	// 	panic("Web: webLoginKey not initialized!")
+	// }
 
 	go func() {
 		// retry three times. yes, I know about loops.
