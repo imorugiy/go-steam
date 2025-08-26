@@ -17,6 +17,7 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"net/http"
 	"os"
 	"path"
 	"reflect"
@@ -24,6 +25,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/imorugiy/go-steam"
+	"github.com/imorugiy/go-steam/community"
 	"github.com/imorugiy/go-steam/netutil"
 	"github.com/imorugiy/go-steam/protocol"
 )
@@ -106,6 +108,10 @@ func (w *Web) HandleEvent(event interface{}) {
 	case *steam.WebLogOnErrorEvent:
 		w.bot.Log.Printf("Failed to web log on (%v)", e)
 	}
+}
+
+func (w *Web) SetCommunityCookies(client *http.Client) {
+	community.SetCookies(client, w.bot.Client.Web.SessionId, w.bot.Client.Web.SteamLogin, w.bot.Client.Web.SteamLoginSecure)
 }
 
 // This module saves the server list from ClientCMListEvent and uses
