@@ -31,35 +31,6 @@ func assertValidHex(h string) error {
 	return nil
 }
 
-func BytesToFloat(uintValue uint32) float32 {
-	return math.Float32frombits(uintValue)
-}
-
-func FloatToBytes(f float32) uint32 {
-	return math.Float32bits(f)
-}
-
-func GenerateHex(econ *pb.CEconItemPreviewDataBlock) (string, error) {
-	if econ.Paintwear == nil {
-		defaultPw := FloatToBytes(0.001)
-		econ.Paintwear = &defaultPw
-	}
-
-	payload, err := proto.Marshal(econ)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal econ item: %w", err)
-	}
-
-	checksum := getChecksum(payload)
-	crcBuf := make([]byte, 4)
-	binary.BigEndian.PutUint32(crcBuf, checksum)
-
-	buf := append([]byte{0}, payload...)
-	buf = append(buf, crcBuf...)
-
-	return strings.ToUpper(hex.EncodeToString(buf)), nil
-}
-
 func getChecksum(payload []byte) uint32 {
 	data := append([]byte{0}, payload...)
 	crc := crc32.ChecksumIEEE(data)
@@ -157,6 +128,35 @@ func decodeMaskedBuffer(buf []byte) (*pb.CEconItemPreviewDataBlock, error) {
 	}
 	payload := unmasked[1 : len(unmasked)-4]
 	return decodePayload(payload, isDecodedMaskedInspectPayload)
+}
+
+func BytesToFloat(uintValue uint32) float32 {
+	return math.Float32frombits(uintValue)
+}
+
+func FloatToBytes(f float32) uint32 {
+	return math.Float32bits(f)
+}
+
+func GenerateHex(econ *pb.CEconItemPreviewDataBlock) (string, error) {
+	if econ.Paintwear == nil {
+		defaultPw := FloatToBytes(0.001)
+		econ.Paintwear = &defaultPw
+	}
+
+	payload, err := proto.Marshal(econ)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal econ item: %w", err)
+	}
+
+	checksum := getChecksum(payload)
+	crcBuf := make([]byte, 4)
+	binary.BigEndian.PutUint32(crcBuf, checksum)
+
+	buf := append([]byte{0}, payload...)
+	buf = append(buf, crcBuf...)
+
+	return strings.ToUpper(hex.EncodeToString(buf)), nil
 }
 
 func DecodeHex(hexStr string) (*pb.CEconItemPreviewDataBlock, error) {
